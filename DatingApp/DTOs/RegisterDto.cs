@@ -11,6 +11,7 @@ namespace DatingApp.DTOs
         [Required] //validare pentru a nu putea introduce date null,atributul ApiController se ocupa de validarea parametrilor din endpoint automat
         public string Username { get; set; }
         [Required]
+        [StringLength(8,MinimumLength =4)]
         public string Password { get; set; }
     }
 }

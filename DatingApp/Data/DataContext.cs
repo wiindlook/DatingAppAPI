@@ -14,5 +14,6 @@ namespace DatingApp.Data
            
         }
         public  DbSet<AppUser>Users { get; set; } //proprietate de tipul DbSet->ia tipul clasei caruia vrei sa-i cream un DbSet, dupa dam call la tabelul  din baza de date AppUsers
+        
     }
 }

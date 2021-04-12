@@ -1,4 +1,5 @@
 ﻿using DatingApp.Data;
+using DatingApp.Helper;
 using DatingApp.Interfaces;
 using DatingApp.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ namespace DatingApp.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services,IConfiguration config)
         {
             services.AddScoped<ITokenService, TokenService>();
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);//trb sa stie unde sa gaseasca in proiect
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddDbContext<DataContext>(options =>//options este parametrul pe care il dam in brackets de mai jos
             {
                 options.UseSqlite(config.GetConnectionString("DefaultConnection"));

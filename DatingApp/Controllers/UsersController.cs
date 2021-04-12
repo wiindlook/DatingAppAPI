@@ -1,5 +1,8 @@
-﻿using DatingApp.Data;
+﻿using AutoMapper;
+using DatingApp.Data;
+using DatingApp.DTOs;
 using DatingApp.Entity;
+using DatingApp.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,26 +17,34 @@ namespace DatingApp.Controllers
     [Authorize]
     public class UsersController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UsersController(DataContext context)
+        public UsersController(IUserRepository userRepository,IMapper mapper)
         {
-            _context = context;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers() // returneaza o lista de useri.Ienum returneaza o lista simpla pentru a returna de asta nu am folosit list deoarce list are si alte optiuni 
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // returneaza o lista de useri.Ienum returneaza o lista simpla pentru a returna de asta nu am folosit list deoarce list are si alte optiuni 
         {
-            return await _context.Users.ToListAsync(); //daca nu facem nimic cu ele o variabila declara folosim return
+            //return await _context.Users.ToListAsync(); //daca nu facem nimic cu ele o variabila declara folosim return
             //practic cand un request merge catre baza de date  codul se pune pe pauza este asignat unui task care merge catre baza de date iar dupa prin await ia raspunsul din task.
 
-        }
-        //api/users/exid
-        [HttpGet("{id}")]
-        public async  Task<ActionResult<AppUser>> GetUser(int id)
-        {
-           return  await _context.Users.FindAsync(id);
+            var users = await _userRepository.GetMembersAsync();
            
+            return Ok(users);
+        }
+       
+      
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<MemberDto>> GetUser(string username)
+        {
+            return await _userRepository.GetMemberAsync(username);
+           
+
         }
     }
 }

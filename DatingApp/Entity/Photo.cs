@@ -12,7 +12,7 @@ namespace DatingApp.Entity
         public AppUser AppUser { get; set; } //s-a folosit convention EF pentru a configura relatia dintre tabele cum vrei noi ci anume
         //Id-ul sa nu poate fi nullable si atunci cand stergem un user sa se stearga si poza and etc, de la restricted la cascade
 
-        public int AppUserId { get; set; }
+        public int AppUserId { get; set; } // cu aceste 2 atribute configuram relatia dintre tabele
     }
    
 

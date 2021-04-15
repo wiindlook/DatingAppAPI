@@ -16,7 +16,10 @@ namespace DatingApp.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services,IConfiguration config)
         {
+
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings")); //ii spunem configurari de unde sa ia configurarea efectiva
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);//trb sa stie unde sa gaseasca in proiect
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddDbContext<DataContext>(options =>//options este parametrul pe care il dam in brackets de mai jos

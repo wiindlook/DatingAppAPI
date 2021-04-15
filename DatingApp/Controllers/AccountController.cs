@@ -49,7 +49,9 @@ namespace DatingApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>>Login(LoginDto loginDto)
            {
-            var user = await _context.Users.SingleOrDefaultAsync(x=>x.UserName==loginDto.Username);//se fol await deoarece se face un apel la baza de date
+            var user = await _context.Users
+                .Include(p=>p.Photos)
+                .SingleOrDefaultAsync(x=>x.UserName==loginDto.Username);//se fol await deoarece se face un apel la baza de date
             if (user == null) return Unauthorized("Invalid username");
             using var hmac = new HMACSHA512(user.PasswordSalt);//are un overload care ia un key ca parametru
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
@@ -60,7 +62,8 @@ namespace DatingApp.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl=user.Photos.FirstOrDefault(x=>x.IsMain)?.Url
             };
     }
         private async Task<bool> UserExists(string username)

@@ -20,6 +20,7 @@ namespace DatingApp.Helper
                 src.DateOfBirth.CalculateAge())); //mapam o proprietate
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, AppUser>();
+            CreateMap<RegisterDto, AppUser>();//pentru a nu mapa manual proprietatile din accountcontroller
 
         }
     }

@@ -3,6 +3,7 @@ using DatingApp.Data;
 using DatingApp.DTOs;
 using DatingApp.Entity;
 using DatingApp.Extensions;
+using DatingApp.Helper;
 using DatingApp.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,13 +32,23 @@ namespace DatingApp.Controllers
             _photoService = photoService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // returneaza o lista de useri.Ienum returneaza o lista simpla pentru a returna de asta nu am folosit list deoarce list are si alte optiuni 
+        [HttpGet]                                                     //se da [fromquery] pt a stii ce parametrii sa ia.
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams) // returneaza o lista de useri.Ienum returneaza o lista simpla pentru a returna de asta nu am folosit list deoarce list are si alte optiuni 
         {
             //return await _context.Users.ToListAsync(); //daca nu facem nimic cu ele o variabila declara folosim return
             //practic cand un request merge catre baza de date  codul se pune pe pauza este asignat unui task care merge catre baza de date iar dupa prin await ia raspunsul din task.
 
-            var users = await _userRepository.GetMembersAsync();
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername()); 
+            userParams.CurrentUsername = user.UserName; //luam userul curent
+
+            if(string.IsNullOrEmpty(userParams.Gender))//verificam ce gender are userul
+            {
+                userParams.Gender = user.Gender == "male" ? "female" : "male";
+            }
+
+            var users = await _userRepository.GetMembersAsync(userParams);
+
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize,users.TotalCount, users.TotalPages);
 
             return Ok(users);
         }

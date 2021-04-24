@@ -21,6 +21,11 @@ namespace DatingApp.Helper
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, AppUser>();
             CreateMap<RegisterDto, AppUser>();//pentru a nu mapa manual proprietatile din accountcontroller
+            CreateMap<Message, MessageDto>()
+                .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(src =>
+                     src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url))
+                .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(src =>
+                     src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url));
 
         }
     }

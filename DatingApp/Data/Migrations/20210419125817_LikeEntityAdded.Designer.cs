@@ -3,14 +3,16 @@ using System;
 using DatingApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210419125817_LikeEntityAdded")]
+    partial class LikeEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,48 +68,6 @@ namespace DatingApp.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DatingApp.Entity.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateRead")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("MessageSent")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("RecipientDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RecipientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("RecipientUsername")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("SenderDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SenderUsername")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("senderId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipientId");
-
-                    b.HasIndex("senderId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("DatingApp.Entity.Photo", b =>
                 {
                     b.Property<int>("Id")
@@ -148,25 +108,6 @@ namespace DatingApp.Data.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("DatingApp.Entity.Message", b =>
-                {
-                    b.HasOne("DatingApp.Entity.AppUser", "Recipient")
-                        .WithMany("MessagesReceived")
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DatingApp.Entity.AppUser", "Sender")
-                        .WithMany("MessagesSent")
-                        .HasForeignKey("senderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Recipient");
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("DatingApp.Entity.Photo", b =>
                 {
                     b.HasOne("DatingApp.Entity.AppUser", "AppUser")
@@ -202,10 +143,6 @@ namespace DatingApp.Data.Migrations
                     b.Navigation("LikedByUsers");
 
                     b.Navigation("LikedUsers");
-
-                    b.Navigation("MessagesReceived");
-
-                    b.Navigation("MessagesSent");
 
                     b.Navigation("Photos");
                 });
